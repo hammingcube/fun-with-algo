@@ -1,11 +1,19 @@
 package algo
 
-import "testing"
+import (
+	"fmt"
+	"gopkg.in/pipe.v2"
+	"testing"
+)
 
 func TestAverage(t *testing.T) {
-	var v float64
-	v = 1.5
-	if v != 1.5 {
-		t.Error("Expected 1.5, got ", v)
+	p1 := pipe.Line(
+		pipe.ReadFile("../solutions/input.txt"),
+	)
+	got, err := pipe.CombinedOutput(p1)
+	if err != nil {
+		t.Error("Something went wrong!")
+	} else {
+		fmt.Printf("%s", got)
 	}
 }
