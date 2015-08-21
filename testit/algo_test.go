@@ -8,7 +8,7 @@ import (
 
 func TestAverage(t *testing.T) {
 	p1 := pipe.Line(
-		pipe.ReadFile("../solutions/input.txt"),
+		pipe.ReadFile("../solutions/input01.txt"),
 	)
 	got, err := pipe.CombinedOutput(p1)
 	if err != nil {
