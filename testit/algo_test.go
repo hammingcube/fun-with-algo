@@ -3,17 +3,24 @@ package algo
 import (
 	"fmt"
 	"gopkg.in/pipe.v2"
+	"strings"
 	"testing"
 )
 
-func TestAverage(t *testing.T) {
+func TestMain(t *testing.T) {
 	p1 := pipe.Line(
-		pipe.ReadFile("../solutions/input.txt"),
+		pipe.ChDir("../solutions/prob1/v1/"),
+		pipe.ReadFile("input.txt"),
+		pipe.Exec("./runit"),
+	)
+	p2 := pipe.Line(
+		pipe.ReadFile("../problems/prob1/v1/output.txt"),
 	)
 	got, err := pipe.CombinedOutput(p1)
+	expected, err := pipe.CombinedOutput(p2)
+
 	if err != nil {
-		t.Error("Something went wrong!")
-	} else {
-		fmt.Printf("%s", got)
+		fmt.Printf("%v\n", err)
 	}
+	fmt.Printf("got=%s expected=%s\n", strings.TrimSpace(string(got)), strings.TrimSpace(string(expected)))
 }
