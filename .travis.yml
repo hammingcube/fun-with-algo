@@ -1,1 +1,1 @@
-language: go
+script: diff <(problems/prob1/v1/gen | problems/prob1/v1/soln)  <(problems/prob1/v1/gen | (g++ solutions/prob1/v1/a.cpp && ./a.out))
