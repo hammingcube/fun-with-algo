@@ -1,4 +1,5 @@
 # include <iostream>
+# include <fstream>
 
 using namespace std;
 
@@ -8,8 +9,10 @@ int func(int a, int b) {
 
 int main() {
 	int a, b, result;
-	while(cin >> a) {
-		cin >> b;
+	//cout << "Hello\n";	
+	ifstream ifile("STDIN");
+	while(ifile >> a) {
+		ifile >> b;
 		result = func(a,b);
 		cout << result << endl;
 	}
