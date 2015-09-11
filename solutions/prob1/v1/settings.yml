@@ -1,8 +1,8 @@
 ---
 # Test settings for code
 author: Madhav Jha
-language: c++
+language: cpp
 code: a.cpp
 testcases:
-    STDIN: STDOUT
-    file1_input: file2_output
+  - STDIN
+  - file1_input
