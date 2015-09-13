@@ -29,8 +29,11 @@ func runProg(cmd *exec.Cmd) (io.WriteCloser, io.ReadCloser, error) {
 	return w, stdout, nil
 }
 
+var inputLog bytes.Buffer
+
 func runIt(r io.Reader, prog1 *exec.Cmd, prog2 *exec.Cmd) (io.ReadCloser, io.ReadCloser) {
 
+	iw := bufio.NewWriter(&inputLog)
 	w1, r1, err := runProg(prog1)
 	if err != nil {
 		log.Fatal(err)
@@ -43,7 +46,8 @@ func runIt(r io.Reader, prog1 *exec.Cmd, prog2 *exec.Cmd) (io.ReadCloser, io.Rea
 	go func() {
 		defer w1.Close()
 		defer w2.Close()
-		mw := io.MultiWriter(w1, w2)
+		defer iw.Flush()
+		mw := io.MultiWriter(w1, w2, iw)
 		io.Copy(mw, r)
 	}()
 
@@ -99,7 +103,7 @@ func diff2(r1, r2 io.Reader) {
 		line2 := scanner2.Text()
 		fmt.Printf("So far: %s, %s\n", line1, line2)
 		if line1 != line2 {
-			log.Fatalf("Mismatch:\n->%s\n=>%s\n", line1, line2)
+			fmt.Printf("Mismatch:\n->%s\n=>%s\n", line1, line2)
 		}
 	}
 }
@@ -127,4 +131,6 @@ func main() {
 	if err != nil || err1 != nil {
 		fmt.Println(err, err1)
 	}
+
+	fmt.Printf("Here: %s", &inputLog)
 }
