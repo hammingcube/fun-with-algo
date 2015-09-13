@@ -11,9 +11,6 @@ import (
 	"os/exec"
 )
 
-const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-const LOWER = "abcdefghijklmnopqrstuvwxyz"
-
 func runProg(cmd *exec.Cmd) (io.WriteCloser, io.ReadCloser, error) {
 	w, err := cmd.StdinPipe()
 	if err != nil {
@@ -55,34 +52,36 @@ func runIt(r io.Reader, prog1 *exec.Cmd, prog2 *exec.Cmd) (io.ReadCloser, io.Rea
 	return r1, r2
 }
 
-func diff(r1, r2 io.Reader) {
-	for {
-		b1 := make([]byte, 1)
-		b2 := make([]byte, 1)
-		n1, err1 := r1.Read(b1)
-		n2, err2 := r2.Read(b2)
+func main() {
+	genBinary, prog1Binary, prog2Binary := os.Args[1], os.Args[2], os.Args[3]
 
-		if err1 == io.EOF || err2 == io.EOF {
-			break
-		}
-
-		var n int
-		if n1 < n2 {
-			n = n1
-			r2 = io.MultiReader(bytes.NewReader(b2[n:n2]), r2)
-		} else {
-			n = n2
-			r1 = io.MultiReader(bytes.NewReader(b1[n:n1]), r1)
-		}
-		fmt.Printf("So far %d: %s, %s\n", n, b1[:n], b2[:n])
-		if string(b1[:n]) != string(b2[:n]) {
-			log.Fatal("Mimatch found!")
-		}
-
-		//fmt.Printf("Read %d bytes: %s. Err: %v\n", n1, b1, err1)
-		//fmt.Printf("Read %d bytes: %s. Err: %v\n", n2, b2, err2)
+	generator := exec.Command(genBinary)
+	r, err := generator.StdoutPipe()
+	if err != nil {
+		fmt.Println(err)
 	}
 
+	prog1 := exec.Command(prog1Binary)
+	prog2 := exec.Command(prog2Binary)
+
+	r1, r2 := runIt(r, prog1, prog2)
+
+	generator.Run()
+
+	diff2(r1, r2)
+
+	err = prog1.Wait()
+	err1 := prog2.Wait()
+	if err != nil || err1 != nil {
+		fmt.Println(err, err1)
+	}
+	ioutil.WriteFile("input.txt", inputLog.Bytes(), 0644)
+	ioutil.WriteFile("out1.txt", w1Log.Bytes(), 0644)
+	ioutil.WriteFile("out2.txt", w2Log.Bytes(), 0644)
+
+	//fmt.Printf("inputLog: %s\n", &inputLog)
+	//fmt.Printf("w1Log: %s\n", &w1Log)
+	//fmt.Printf("w2Log: %s\n", &w2Log)
 }
 
 func diff2(r1, r2 io.Reader) {
@@ -117,36 +116,4 @@ func diff2(r1, r2 io.Reader) {
 			fmt.Printf("Mismatch:\n->%s\n=>%s\n", line1, line2)
 		}
 	}
-}
-
-func main() {
-	genBinary, prog1Binary, prog2Binary := os.Args[1], os.Args[2], os.Args[3]
-
-	generator := exec.Command(genBinary)
-	r, err := generator.StdoutPipe()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	prog1 := exec.Command(prog1Binary)
-	prog2 := exec.Command(prog2Binary)
-
-	r1, r2 := runIt(r, prog1, prog2)
-
-	generator.Run()
-
-	diff2(r1, r2)
-
-	err = prog1.Wait()
-	err1 := prog2.Wait()
-	if err != nil || err1 != nil {
-		fmt.Println(err, err1)
-	}
-	ioutil.WriteFile("inptu.txt", inputLog.Bytes(), 0644)
-	ioutil.WriteFile("out1.txt", w1Log.Bytes(), 0644)
-	ioutil.WriteFile("out2.txt", w2Log.Bytes(), 0644)
-
-	//fmt.Printf("inputLog: %s\n", &inputLog)
-	//fmt.Printf("w1Log: %s\n", &w1Log)
-	//fmt.Printf("w2Log: %s\n", &w2Log)
 }
