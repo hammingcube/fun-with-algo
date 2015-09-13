@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -29,7 +30,7 @@ func runProg(cmd *exec.Cmd) (io.WriteCloser, io.ReadCloser, error) {
 	return w, stdout, nil
 }
 
-var inputLog bytes.Buffer
+var inputLog, w1Log, w2Log bytes.Buffer
 
 func runIt(r io.Reader, prog1 *exec.Cmd, prog2 *exec.Cmd) (io.ReadCloser, io.ReadCloser) {
 
@@ -85,8 +86,18 @@ func diff(r1, r2 io.Reader) {
 }
 
 func diff2(r1, r2 io.Reader) {
-	scanner1 := bufio.NewScanner(r1)
-	scanner2 := bufio.NewScanner(r2)
+
+	iw1 := bufio.NewWriter(&w1Log)
+	iw2 := bufio.NewWriter(&w2Log)
+
+	defer iw1.Flush()
+	defer iw2.Flush()
+
+	tr1 := io.TeeReader(r1, iw1)
+	tr2 := io.TeeReader(r2, iw2)
+
+	scanner1 := bufio.NewScanner(tr1)
+	scanner2 := bufio.NewScanner(tr2)
 	for {
 		n1 := scanner1.Scan()
 		n2 := scanner2.Scan()
@@ -131,6 +142,11 @@ func main() {
 	if err != nil || err1 != nil {
 		fmt.Println(err, err1)
 	}
+	ioutil.WriteFile("inptu.txt", inputLog.Bytes(), 0644)
+	ioutil.WriteFile("out1.txt", w1Log.Bytes(), 0644)
+	ioutil.WriteFile("out2.txt", w2Log.Bytes(), 0644)
 
-	fmt.Printf("Here: %s", &inputLog)
+	//fmt.Printf("inputLog: %s\n", &inputLog)
+	//fmt.Printf("w1Log: %s\n", &w1Log)
+	//fmt.Printf("w2Log: %s\n", &w2Log)
 }

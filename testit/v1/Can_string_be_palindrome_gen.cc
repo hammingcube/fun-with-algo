@@ -25,7 +25,7 @@ string RandString(int len) {
 
 int main(int argc, char *argv[]) {
   default_random_engine gen((random_device())());
-  for (int times = 0; times < 1000; ++times) {
+  for (int times = 0; times < 10; ++times) {
     string s;
     if (argc == 2) {
       s = argv[1];
