@@ -1,0 +1,16 @@
+{
+  "runtests": {
+    "problem-a1212": {
+      "my-solutions": [
+        "problems/prob1/v1",
+        "problems/prob1/v2"
+      ]
+    },
+    "problem-b11321": {
+      "my-solutions": [
+        "problems/prob1/v1",
+        "problems/prob1/v2"
+      ]
+    }
+  }
+}
