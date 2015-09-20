@@ -1,9 +1,0 @@
----
-# Test settings for code
-author: Madhav Jha
-language: cpp
-code: a.cpp
-testcases:
-  - STDIN
-  - file1_input
-
