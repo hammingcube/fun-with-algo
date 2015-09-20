@@ -1,7 +1,3 @@
 {
-  "runtests": {
-    "prob-1": {
-      "my-solution": "my-solutions/prob-1/my-soln"
-    }
-  }
+  "runtests": "prob-1,my-soln"
 }
