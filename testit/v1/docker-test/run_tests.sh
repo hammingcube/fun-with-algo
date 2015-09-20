@@ -7,4 +7,6 @@ cp gen/gen workdir
 cp my-soln/my-soln workdir
 cp primary-soln/primary-soln workdir
 cp runtest/runtest workdir
+cd workdir
+docker run --rm -v "$(pwd)":/app -w /app ubuntu ./runtest ./gen ./my-soln ./primary-soln
 
