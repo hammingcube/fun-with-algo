@@ -1,4 +1,7 @@
 {
   "runtests": {
-    "prob-1" : { "my-solution": "my-solutions/prob-1/my-soln"}
+    "prob-1": {
+      "my-solution": "my-solutions/prob-1/my-soln"
+    }
+  }
 }
