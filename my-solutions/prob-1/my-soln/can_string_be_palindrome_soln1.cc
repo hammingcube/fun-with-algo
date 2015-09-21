@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Elements of Programming Interviews. All rights reserved.
-// Some comment
+
 #include <cassert>
 #include <iostream>
 #include <random>
