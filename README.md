@@ -6,8 +6,4 @@
 docker run --rm -v "$(pwd)":/app -w /app glot/clang sh local_build.sh soln
 ```
 
-
-More changes
--- OK
--- NOK
-Fine
+Things should compile fine now.
