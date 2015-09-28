@@ -16,6 +16,8 @@ using std::string;
 
 int main(int argc, char *argv[]) {
   string s;
+  // Read from STDIN and write to STDOUT
+  // More changes
   while(cin >> s){
     cout << CanStringBeAPalindromeHash::CanStringBeAPalindrome(s) << endl;
   }
