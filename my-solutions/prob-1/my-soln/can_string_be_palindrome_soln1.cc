@@ -1,5 +1,4 @@
 // Copyright (c) 2015 Elements of Programming Interviews. All rights reserved.
-// Some Comments
 
 #include <cassert>
 #include <iostream>
